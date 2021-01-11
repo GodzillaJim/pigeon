@@ -1,92 +1,121 @@
 import React, { useState, useEffect } from 'react';
-import { LinkContainer } from 'react-router-bootstrap';
+import { useDispatch } from 'react-redux';
 import { Nav, Navbar } from 'react-bootstrap';
-import Genesis from '../../backend/bible/Genesis.json';
-import TextField from '@material-ui/core/TextField';
-import Autocomplete from '@material-ui/lab/Autocomplete';
-import { Container, Row, Col } from 'react-bootstrap';
+import Genesis from '../data/Genesis.json';
+import { Form, Button } from 'react-bootstrap';
+import { Autocomplete } from '@material-ui/lab';
+import { TextField } from '@material-ui/core';
+import { setBookAction } from '../actions/actions';
 
 const NavbarComponent = () => {
+  const dispatch = useDispatch();
   const [book, setBook] = useState('Genesis');
   const [chapters, setChapters] = useState([1, 2, 3, 4, 5, 6, 7, 8, 9]);
   const [chapter, setChapter] = useState(1);
   const [verses, setVerses] = useState([1, 2, 3, 4, 5, 6, 7, 8, 9]);
-  const [verse, setVerse] = useState(1)
-  const [text, setText] = useState('')
+  const [verse, setVerse] = useState(1);
+  const [text, setText] = useState('Trww');
+  const [disableChapter, setDisableChapter] = useState(true);
+  const [disableVerse, setDisableVerse] = useState(true);
   const [books, setBooks] = useState([
     'Genesis',
     'Exodus',
     'Leviticus',
     'Numbers',
   ]);
+
   useEffect(() => {
-      setBooks([...books, 'Mathew'])
-      setBook('Genesis')
-      setChapter(1)
-      setVerse(1)
-      setText(Genesis.chapters[chapter].verses[verse].text)
-      setChapters([...Genesis.chapters.keys()])
-      setVerses([...Genesis.chapters[chapter].keys()])
-  }, [books, chapter, verse])
+    setDisableChapter(books.find(book) && false);
+    setDisableVerse(chapters.find(chapter) && false);
+  }, [Genesis]);
+
+  const styler = {
+    navbar: {
+      boxShadow: '0px 6px 5px 0px rgba(0,0,0,0.36)',
+    },
+  };
+  const submitHandler = (e) => {
+    e.preventDefault();
+    dispatch(setBookAction(book));
+  };
   return (
-    <Navbar bg='light'>
-      <Nav className='mx-auto'>
-        <Row>
-          <Col>
-            <Autocomplete
-              getOptionLabel={(option) => option}
-              style={{ width: 'auto' }}
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  label='Book'
-                  variant='standard'
-                  required
-                  value={book}
-                />
-              )}
-              id='book'
-              options={books}
-            />
-          </Col>
-          <Col>
-            <Autocomplete
-              getOptionLabel={(option) => option}
-              style={{ width: 'auto' }}
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  label='Chapter'
-                  variant='standard'
-                  type='number'
-                  required
-                  value={chapter}
-                />
-              )}
-              id='book'
-              options={chapters}
-            />
-          </Col>
-          <Col>
-            <Autocomplete
-              getOptionLabel={(option) => option}
-              style={{ width: 'auto' }}
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  label='Verse'
-                  variant='standard'
-                  type='number'
-                  required
-                  value={verse}
-                />
-              )}
-              id='book'
-              options={verses}
-            />
-          </Col>
-        </Row>
-      </Nav>
+    <Navbar
+      bg='light'
+      className='justify-content-between navbar-expand-*'
+      style={styler.navbar}
+    >
+      <Navbar.Toggle aria-controls='basic-navbar-nav' />
+      <Navbar.Collapse
+        id='basic-navbar-nav'
+        className='justify-content-between'
+      >
+        <Nav className={window.innerWidth > 768 ? 'mx-auto py-2' : 'mx-auto'}>
+          <Form inline onSubmit={submitHandler}>
+            <Form.Group id='book-form-group'>
+              <Autocomplete
+                className={`mx-2 w-7`}
+                color='inherit'
+                id='book'
+                onChange={(e, value) => setBook(value)}
+                options={books}
+                getOptionLabel={(option) => option}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    label='Book'
+                    className='primary'
+                    variant='standard'
+                    value={book}
+                    size={'small'}
+                    className='text-center'
+                  />
+                )}
+              />
+            </Form.Group>
+            <Form.Group id='chapter-form-group'>
+              <Autocomplete
+                className=' mx-2 w-45'
+                color='inherit'
+                id='chapter'
+                disabled={disableChapter}
+                options={chapters}
+                onChange={(e, value) => setChapter(value)}
+                getOptionLabel={(option) => option + ''}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    label={window.innerWidth < 350 ? 'Ch' : 'Chapter'}
+                    variant='standard'
+                    className='text-center'
+                  />
+                )}
+              />
+            </Form.Group>
+            <Form.Group id='verse-form-group'>
+              <Autocomplete
+                className='w-45 mx-2'
+                color='inherit'
+                id='verse'
+                disabled={disableVerse}
+                options={verses}
+                onChange={(e, value) => setVerse(value)}
+                getOptionLabel={(option) => option + ''}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    label={window.innerWidth < 350 ? 'Vs' : 'Verse'}
+                    variant='standard'
+                    className='text-center'
+                  />
+                )}
+              />
+            </Form.Group>
+            <Button type='submit' className='btn btn-primary'>
+              Go
+            </Button>
+          </Form>
+        </Nav>
+      </Navbar.Collapse>
     </Navbar>
   );
 };
