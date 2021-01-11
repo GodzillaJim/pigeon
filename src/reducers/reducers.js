@@ -8,14 +8,14 @@ import {
 } from '../constants/constants';
 
 export const setBookReducer = (
-  state = { book: 'Genesis', chapter: 1, verse: 1 },
+  state = { book: 'Genesis', chapters: [], chapter: 1, verse: 1 },
   action
 ) => {
   switch (action.type) {
     case SET_BOOK_REQUEST:
-      return { loading: true };
+      return { loading: true, book, chapters };
     case SET_BOOK_SUCCESS:
-      return { loading: false, book: action.payload };
+      return { loading: false, ...action.payload };
     case SET_BOOK_FAIL:
       return { loading: false, error: action.payload };
     default:
@@ -23,14 +23,14 @@ export const setBookReducer = (
   }
 };
 
-export const setBooksReducer = (state = { books: [] }) => {
+export const setBooksReducer = (state = { books: [] }, action) => {
   switch (action.type) {
     case SET_ALL_BOOKS_REQUEST:
-      return { loading: true };
+      return { loading: true, books: [] };
     case SET_ALL_BOOKS_SUCCESS:
       return { loading: false, books: action.payload };
     case SET_ALL_BOOKS_FAIL:
-      return { loading: false, error: action.payload };
+      return { loading: false, error: action.payload, ...state };
     default:
       return state;
   }

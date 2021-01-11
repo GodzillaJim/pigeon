@@ -13,7 +13,7 @@ const App = () => {
       <NavbarComponent />
       <main>
         <Container>
-          <Route path='/' component={HomeScree} />
+          <Route path='/' component={HomeScreen} />
         </Container>
       </main>
     </Router>

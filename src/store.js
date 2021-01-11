@@ -8,7 +8,7 @@ const reducer = combineReducers({
   setBooks: setBooksReducer,
 });
 
-const initialState = {};
+const initialState = { setBooks: { books: [] } };
 const middleWare = [thunk];
 const store = createStore(
   reducer,

@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Nav, Navbar } from 'react-bootstrap';
-import Genesis from '../data/Genesis.json';
 import { Form, Button } from 'react-bootstrap';
 import { Autocomplete } from '@material-ui/lab';
 import { TextField } from '@material-ui/core';
@@ -9,6 +8,7 @@ import { setBookAction } from '../actions/actions';
 
 const NavbarComponent = () => {
   const dispatch = useDispatch();
+  const { books: allBooks } = useSelector((state) => state.setBooks);
   const [book, setBook] = useState('Genesis');
   const [chapters, setChapters] = useState([1, 2, 3, 4, 5, 6, 7, 8, 9]);
   const [chapter, setChapter] = useState(1);
@@ -17,6 +17,7 @@ const NavbarComponent = () => {
   const [text, setText] = useState('Trww');
   const [disableChapter, setDisableChapter] = useState(true);
   const [disableVerse, setDisableVerse] = useState(true);
+  const [error, setError] = useState(null);
   const [books, setBooks] = useState([
     'Genesis',
     'Exodus',
@@ -25,9 +26,8 @@ const NavbarComponent = () => {
   ]);
 
   useEffect(() => {
-    setDisableChapter(books.find(book) && false);
-    setDisableVerse(chapters.find(chapter) && false);
-  }, [Genesis]);
+    setBooks(allBooks);
+  }, [allBooks]);
 
   const styler = {
     navbar: {
@@ -38,6 +38,20 @@ const NavbarComponent = () => {
     e.preventDefault();
     dispatch(setBookAction(book));
   };
+  const setBookHandler = (e, val) => {
+    let t = books.indexOf(val);
+    if (t !== -1) {
+      setBook(val);
+      setError(null);
+      setDisableChapter(false);
+      dispatch(setBookAction(book));
+    } else {
+      let error = new Error('Book not found!');
+      setError(error);
+      setDisableChapter(true);
+    }
+  };
+  const setChapterHandler = () => {};
   return (
     <Navbar
       bg='light'
@@ -56,7 +70,7 @@ const NavbarComponent = () => {
                 className={`mx-2 w-7`}
                 color='inherit'
                 id='book'
-                onChange={(e, value) => setBook(value)}
+                onChange={setBookHandler}
                 options={books}
                 getOptionLabel={(option) => option}
                 renderInput={(params) => (
