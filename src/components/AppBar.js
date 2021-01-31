@@ -1,33 +1,32 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { withRouter } from 'react-router-dom';
 import { Nav, Navbar } from 'react-bootstrap';
 import { Form, Button } from 'react-bootstrap';
 import { Autocomplete } from '@material-ui/lab';
 import { TextField } from '@material-ui/core';
-import { setBookAction } from '../actions/actions';
+import {
+  setBookAction,
+  setChapterAction,
+  setVerseAction,
+} from '../actions/actions';
 
-const NavbarComponent = () => {
+const NavbarComponent = ({ history }) => {
   const dispatch = useDispatch();
   const { books: allBooks } = useSelector((state) => state.setBooks);
+  const [goIsDisabled, setGoDisabled] = useState(true);
   const [book, setBook] = useState('Genesis');
-  const [chapters, setChapters] = useState([1, 2, 3, 4, 5, 6, 7, 8, 9]);
+  const [chapters, setChapters] = useState([]);
   const [chapter, setChapter] = useState(1);
-  const [verses, setVerses] = useState([1, 2, 3, 4, 5, 6, 7, 8, 9]);
   const [verse, setVerse] = useState(1);
-  const [text, setText] = useState('Trww');
   const [disableChapter, setDisableChapter] = useState(true);
   const [disableVerse, setDisableVerse] = useState(true);
   const [error, setError] = useState(null);
-  const [books, setBooks] = useState([
-    'Genesis',
-    'Exodus',
-    'Leviticus',
-    'Numbers',
-  ]);
 
-  useEffect(() => {
-    setBooks(allBooks);
-  }, [allBooks]);
+  const { book: currentBook, chapters: newChapters } = useSelector(
+    (state) => state.setBook
+  );
+  const { verses: newVerses } = useSelector((state) => state.setChapter);
 
   const styler = {
     navbar: {
@@ -36,22 +35,57 @@ const NavbarComponent = () => {
   };
   const submitHandler = (e) => {
     e.preventDefault();
-    dispatch(setBookAction(book));
+    dispatch(setVerseAction({ book, chapter, verse }));
+    history.push(`/word/${book}/${chapter}/${verse}`);
   };
   const setBookHandler = (e, val) => {
-    let t = books.indexOf(val);
-    if (t !== -1) {
-      setBook(val);
-      setError(null);
-      setDisableChapter(false);
-      dispatch(setBookAction(book));
-    } else {
-      let error = new Error('Book not found!');
-      setError(error);
-      setDisableChapter(true);
+    if (val) {
+      let t = allBooks.indexOf(val);
+      if (t !== -1) {
+        setBook(val);
+        setError(null);
+        setDisableChapter(false);
+        dispatch(setBookAction(val));
+        // dispatch(setVerseAction({ book: val, chapter, verse }));
+        setChapters(newChapters);
+      } else {
+        let error = new Error('Book not found!');
+        setError(error);
+        setDisableChapter(true);
+      }
     }
   };
-  const setChapterHandler = () => {};
+  const setChapterHandler = (e, val) => {
+    if (val) {
+      if (Number(val) <= chapters.length || Number(val) > 0) {
+        setDisableVerse(false);
+        setChapter(val);
+        setError(null);
+        dispatch(setChapterAction({ book, chapter }));
+        dispatch(setVerseAction({ book, chapter: val, verse }));
+      } else {
+        let error = new Error('Chapter not found!');
+        setError(error);
+        setDisableVerse(true);
+      }
+    }
+  };
+  const setVerseHandler = (e, val) => {
+    setVerse(val);
+    if (val) {
+      if (Number(val) <= newVerses.length || Number(val) > 0) {
+        setVerse(val);
+        setError(null);
+        dispatch(setVerseAction({ book, chapter, verse: val }));
+        setGoDisabled(false);
+      } else {
+        let error = new Error('Chapter not found!');
+        setError(error);
+        setDisableVerse(true);
+        setGoDisabled(true);
+      }
+    }
+  };
   return (
     <Navbar
       bg='light'
@@ -71,7 +105,7 @@ const NavbarComponent = () => {
                 color='inherit'
                 id='book'
                 onChange={setBookHandler}
-                options={books}
+                options={allBooks}
                 getOptionLabel={(option) => option}
                 renderInput={(params) => (
                   <TextField
@@ -92,8 +126,8 @@ const NavbarComponent = () => {
                 color='inherit'
                 id='chapter'
                 disabled={disableChapter}
-                options={chapters}
-                onChange={(e, value) => setChapter(value)}
+                options={newChapters ? newChapters : []}
+                onChange={setChapterHandler}
                 getOptionLabel={(option) => option + ''}
                 renderInput={(params) => (
                   <TextField
@@ -101,6 +135,7 @@ const NavbarComponent = () => {
                     label={window.innerWidth < 350 ? 'Ch' : 'Chapter'}
                     variant='standard'
                     className='text-center'
+                    value={chapter}
                   />
                 )}
               />
@@ -111,8 +146,8 @@ const NavbarComponent = () => {
                 color='inherit'
                 id='verse'
                 disabled={disableVerse}
-                options={verses}
-                onChange={(e, value) => setVerse(value)}
+                options={newVerses ? newVerses : []}
+                onChange={setVerseHandler}
                 getOptionLabel={(option) => option + ''}
                 renderInput={(params) => (
                   <TextField
@@ -120,11 +155,16 @@ const NavbarComponent = () => {
                     label={window.innerWidth < 350 ? 'Vs' : 'Verse'}
                     variant='standard'
                     className='text-center'
+                    value={verse}
                   />
                 )}
               />
             </Form.Group>
-            <Button type='submit' className='btn btn-primary'>
+            <Button
+              type='submit'
+              className='btn btn-primary'
+              disabled={goIsDisabled}
+            >
               Go
             </Button>
           </Form>
@@ -134,4 +174,4 @@ const NavbarComponent = () => {
   );
 };
 
-export default NavbarComponent;
+export default withRouter(NavbarComponent);
