@@ -15,7 +15,6 @@ import {
   setBooksAction,
   setVerseAction,
   setTextAction,
-  getCategories,
 } from '../actions/actions';
 
 const HomeScreen = ({ history, match }) => {
@@ -84,7 +83,6 @@ const HomeScreen = ({ history, match }) => {
         verse: verseSetVerse,
       })
     );
-    dispatch(getCategories());
   }, [
     dispatch,
     bookSetVerse,
