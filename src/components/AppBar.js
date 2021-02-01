@@ -22,7 +22,6 @@ const NavbarComponent = ({ history }) => {
   const [disableChapter, setDisableChapter] = useState(true);
   const [disableVerse, setDisableVerse] = useState(true);
   const [error, setError] = useState(null);
-
   const { book: currentBook, chapters: newChapters } = useSelector(
     (state) => state.setBook
   );
@@ -43,10 +42,9 @@ const NavbarComponent = ({ history }) => {
       let t = allBooks.indexOf(val);
       if (t !== -1) {
         setBook(val);
-        setError(null);
         setDisableChapter(false);
         dispatch(setBookAction(val));
-        // dispatch(setVerseAction({ book: val, chapter, verse }));
+        dispatch(setVerseAction({ book: val, chapter, verse }));
         setChapters(newChapters);
       } else {
         let error = new Error('Book not found!');

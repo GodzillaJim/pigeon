@@ -18,7 +18,7 @@ import {
   getCategories,
 } from '../actions/actions';
 
-const HomeScreen = ({ match }) => {
+const HomeScreen = ({ history, match }) => {
   const { params } = match;
   let bookUrl = params.book || null;
   let chapterUrl = params.chapter || null;
@@ -28,6 +28,7 @@ const HomeScreen = ({ match }) => {
   const [chapter, setChapter] = useState(chapterUrl);
   const [verse, setVerse] = useState(verseUrl);
   const setBooks = useSelector((state) => state.setBooks);
+  const { finalVerse } = useSelector((state) => state.setReading);
   const { books, loading } = setBooks;
   const { loading: loadingVerse, error: errorVerse, page } = useSelector(
     (state) => state.setReading
@@ -104,15 +105,16 @@ const HomeScreen = ({ match }) => {
       <>
         <Col md='9' sm='9' className='text-center'>
           <Row>
-            <Button
-              variant='outline-primary'
-              size='sm'
-              type='button'
+            <LinkContainer
               style={{ height: '36px', fontSize: '16px' }}
               className='mytop padding-small'
+              disabled={verseSetVerse >= finalVerse}
+              to={`/word/${bookSetVerse}/${chapterSetVerse}/${
+                Number(verseSetVerse) - (verseSetVerse <= 1 ? 0 : 1)
+              }`}
             >
-              Previous
-            </Button>
+              <span className='text-primary'>Previous</span>
+            </LinkContainer>
             <Breadcrumb className='mytop padding-small mx-auto'>
               <LinkContainer to={`/word/${bookSetVerse}`}>
                 <Breadcrumb.Item>{bookSetVerse}</Breadcrumb.Item>
@@ -126,14 +128,16 @@ const HomeScreen = ({ match }) => {
                 <Breadcrumb.Item>{verseSetVerse}</Breadcrumb.Item>
               </LinkContainer>
             </Breadcrumb>
-            <Button
-              variant='outline-primary'
-              size='sm'
+            <LinkContainer
               style={{ height: '36px', fontSize: '16px' }}
               className='mytop padding-small'
+              disabled={verseSetVerse >= finalVerse}
+              to={`/word/${bookSetVerse}/${chapterSetVerse}/${
+                Number(verseSetVerse) + (verseSetVerse >= finalVerse ? 0 : 1)
+              }`}
             >
-              Next
-            </Button>
+              <span className='text-primary'>Next</span>
+            </LinkContainer>
           </Row>
           <Row>
             {loadingVerse ? (
