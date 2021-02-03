@@ -8,6 +8,7 @@ import {
   setVerseReducer,
   setReadingReducer,
   setCategoriesReducer,
+  searchVerseReducer,
 } from './reducers/reducers';
 
 const reducer = combineReducers({
@@ -17,6 +18,7 @@ const reducer = combineReducers({
   setVerse: setVerseReducer,
   setReading: setReadingReducer,
   setCategories: setCategoriesReducer,
+  searchVerse: searchVerseReducer,
 });
 
 const initialState = {

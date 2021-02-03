@@ -16,8 +16,23 @@ import {
   GET_CATEGORIES_REQUEST,
   GET_CATEGORIES_SUCCESS,
   GET_CATEGORIES_FAIL,
+  SEARCH_VERSE_REQUEST,
+  SEARCH_VERSE_SUCCESS,
+  SEARCH_VERSE_FAIL,
 } from '../constants/constants';
 
+export const searchVerseReducer = (state = { results: [] }, action) => {
+  switch (action.type) {
+    case SEARCH_VERSE_REQUEST:
+      return { loading: true, results: [] };
+    case SEARCH_VERSE_SUCCESS:
+      return { loading: false, results: action.payload };
+    case SEARCH_VERSE_FAIL:
+      return { loading: false, error: action.payload };
+    default:
+      return state;
+  }
+};
 export const setCategoriesReducer = (state = { categories: [] }, action) => {
   switch (action.type) {
     case GET_CATEGORIES_REQUEST:

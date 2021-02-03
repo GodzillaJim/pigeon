@@ -10,15 +10,16 @@ import {
 } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
 import Loader from '../components/Loader';
-import Message from '../components/Message';
 import {
   setBooksAction,
   setVerseAction,
   setTextAction,
+  setBookAction,
+  setChapterAction,
 } from '../actions/actions';
 import Popup from '../components/Popup';
 
-const HomeScreen = ({ history, match }) => {
+const HomeScreen = ({ match }) => {
   const { params } = match;
   let bookUrl = params.book || null;
   let chapterUrl = params.chapter || null;
@@ -33,6 +34,12 @@ const HomeScreen = ({ history, match }) => {
   const { loading: loadingVerse, error: errorVerse, page } = useSelector(
     (state) => state.setReading
   );
+  const { chapters: newChapters, loading: bookLoading } = useSelector(
+    (state) => state.setBook
+  );
+  const { verses: newVerses, loading: verseLoading } = useSelector(
+    (state) => state.setChapter
+  );
 
   const {
     book: bookSetVerse,
@@ -40,6 +47,14 @@ const HomeScreen = ({ history, match }) => {
     verse: verseSetVerse,
   } = useSelector((state) => state.setVerse);
   useEffect(() => {
+    if (newChapters.length < 1 && !bookLoading) {
+      dispatch(setBookAction(bookSetVerse));
+    }
+    if (newVerses.length < 1 && !verseLoading) {
+      dispatch(
+        setChapterAction({ book: bookSetVerse, chapter: chapterSetVerse })
+      );
+    }
     if (bookUrl) {
       if (chapterUrl) {
         if (verseUrl) {
@@ -98,11 +113,15 @@ const HomeScreen = ({ history, match }) => {
     bookUrl,
     chapterUrl,
     verseUrl,
+    newChapters,
+    newVerses,
+    bookLoading,
+    verseLoading,
   ]);
   return (
-    <Container className='mx-md-1 my-md-3'>
-      <>
-        <Col md='9' sm='12' xs={12} className='text-center'>
+    <Container fluid className='my-3 col-md-12'>
+      <Row>
+        <Col md='9' sm='12' xs={12} className='text-center bg-light'>
           <Row>
             <LinkContainer
               style={{ height: '36px', fontSize: '16px' }}
@@ -112,19 +131,25 @@ const HomeScreen = ({ history, match }) => {
                 Number(verseSetVerse) - (verseSetVerse <= 1 ? 0 : 1)
               }`}
             >
-              <span className='text-primary'>Previous</span>
+              <span className='text-primary text-bolder mx-2'>Previous</span>
             </LinkContainer>
             <Breadcrumb className='mytop padding-small mx-auto'>
               <LinkContainer to={`/word/${bookSetVerse}`}>
-                <Breadcrumb.Item>{bookSetVerse}</Breadcrumb.Item>
+                <Breadcrumb.Item className='text-bolder'>
+                  {bookSetVerse}
+                </Breadcrumb.Item>
               </LinkContainer>
               <LinkContainer to={`/word/${bookSetVerse}/${chapterSetVerse}`}>
-                <Breadcrumb.Item>{chapterSetVerse}</Breadcrumb.Item>
+                <Breadcrumb.Item className='text-bolder'>
+                  {chapterSetVerse}
+                </Breadcrumb.Item>
               </LinkContainer>
               <LinkContainer
                 to={`/word/${bookSetVerse}/${chapterSetVerse}/${verseSetVerse}`}
               >
-                <Breadcrumb.Item>{verseSetVerse}</Breadcrumb.Item>
+                <Breadcrumb.Item className='text-bolder'>
+                  {verseSetVerse}
+                </Breadcrumb.Item>
               </LinkContainer>
             </Breadcrumb>
             <LinkContainer
@@ -135,7 +160,7 @@ const HomeScreen = ({ history, match }) => {
                 Number(verseSetVerse) + (verseSetVerse >= finalVerse ? 0 : 1)
               }`}
             >
-              <span className='text-primary'>Next</span>
+              <span className='text-primary text-bolder mx-2'>Next</span>
             </LinkContainer>
           </Row>
           <Row>
@@ -168,8 +193,41 @@ const HomeScreen = ({ history, match }) => {
             )}
           </Row>
         </Col>
-        <Col md='3' className='mobile-hide'></Col>
-      </>
+        <Col md='3' className='mobile-hide justify-content-center '>
+          <div className='bg-light my-1'>
+            <h6 className='text-center'>Chapters</h6>
+            {newChapters.map((chapter, key) => (
+              <LinkContainer
+                key={key}
+                to={`/word/${bookSetVerse}/${chapter}/${verseSetVerse}`}
+              >
+                <Button
+                  variant='link'
+                  active={chapter === chapterSetVerse || false}
+                >
+                  {chapter}
+                </Button>
+              </LinkContainer>
+            ))}
+          </div>
+          <div className='bg-light my-1'>
+            <h6 className='text-center'>Verses</h6>
+            {newVerses.map((verse, key) => (
+              <LinkContainer
+                key={key}
+                to={`/word/${bookSetVerse}/${chapterSetVerse}/${verse}`}
+              >
+                <Button
+                  variant='link'
+                  active={verse + '' === verseSetVerse + ''}
+                >
+                  {verse}
+                </Button>
+              </LinkContainer>
+            ))}
+          </div>
+        </Col>
+      </Row>
     </Container>
   );
 };

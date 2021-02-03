@@ -17,7 +17,20 @@ import {
   GET_CATEGORIES_FAIL,
   GET_CATEGORIES_SUCCESS,
   GET_CATEGORIES_REQUEST,
+  SEARCH_VERSE_FAIL,
+  SEARCH_VERSE_REQUEST,
+  SEARCH_VERSE_SUCCESS,
 } from '../constants/constants';
+
+export const searchVerseAction = (keyword) => async (dispatch) => {
+  try {
+    dispatch({ type: SEARCH_VERSE_REQUEST });
+    const { data } = await axios.post('/search', { keyword });
+    dispatch({ type: SEARCH_VERSE_SUCCESS, payload: data });
+  } catch (error) {
+    dispatch({ type: SEARCH_VERSE_FAIL, payload: error });
+  }
+};
 export const getCategories = () => async (dispatch) => {
   try {
     dispatch({ type: GET_CATEGORIES_REQUEST });

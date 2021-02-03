@@ -25,7 +25,7 @@ const CategoryScreen = ({ match }) => {
         {books &&
           books.map((book, key) => (
             <LinkContainer key={key} to={`/word/${book}`}>
-              <Button variant='outline'>
+              <Button variant='link'>
                 {book + (key === Number(books.length - 1) ? '.' : ', ')}
               </Button>
             </LinkContainer>

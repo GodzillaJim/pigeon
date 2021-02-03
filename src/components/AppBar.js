@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useLocation } from 'react-router-dom';
 import { withRouter } from 'react-router-dom';
+import { LinkContainer } from 'react-router-bootstrap';
 import { Nav, Navbar } from 'react-bootstrap';
 import { Form, Button } from 'react-bootstrap';
 import { Autocomplete } from '@material-ui/lab';
@@ -9,10 +11,12 @@ import {
   setBookAction,
   setChapterAction,
   setVerseAction,
+  searchVerseAction,
 } from '../actions/actions';
 
 const NavbarComponent = ({ history }) => {
   const dispatch = useDispatch();
+  const location = useLocation();
   const { books: allBooks } = useSelector((state) => state.setBooks);
   const [goIsDisabled, setGoDisabled] = useState(true);
   const [book, setBook] = useState('Genesis');
@@ -21,6 +25,7 @@ const NavbarComponent = ({ history }) => {
   const [verse, setVerse] = useState(1);
   const [disableChapter, setDisableChapter] = useState(true);
   const [disableVerse, setDisableVerse] = useState(true);
+  const [query, setQuery] = useState('');
   const { chapters: newChapters } = useSelector((state) => state.setBook);
   const { verses: newVerses } = useSelector((state) => state.setChapter);
 
@@ -78,6 +83,13 @@ const NavbarComponent = ({ history }) => {
         setDisableVerse(true);
         setGoDisabled(true);
       }
+    }
+  };
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    dispatch(searchVerseAction(query));
+    if (location.pathname !== '/search') {
+      history.push('/search');
     }
   };
   return (
@@ -163,6 +175,24 @@ const NavbarComponent = ({ history }) => {
             </Button>
           </Form>
         </Nav>
+        {window.innerWidth < 768 ? (
+          <LinkContainer to='/search'>
+            <i className='fas fa-search text-primary'></i>
+          </LinkContainer>
+        ) : (
+          <Form inline onSubmit={handleSubmit}>
+            <Form.Control
+              type='text'
+              placeholder='Search'
+              className='mr-sm-2'
+              onChange={(e) => setQuery(e.target.value)}
+              value={query}
+            />
+            <Button type='submit'>
+              <i className='fas fa-search'></i>
+            </Button>
+          </Form>
+        )}
       </Navbar.Collapse>
     </Navbar>
   );
