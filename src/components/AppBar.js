@@ -138,7 +138,7 @@ const NavbarComponent = ({ history }) => {
                 renderInput={(params) => (
                   <TextField
                     {...params}
-                    label={window.innerWidth < 350 ? 'Ch' : 'Chapter'}
+                    label={window.innerWidth < 500 ? 'Ch' : 'Chapter'}
                     variant='standard'
                     className='text-center'
                     value={chapter}
@@ -158,7 +158,7 @@ const NavbarComponent = ({ history }) => {
                 renderInput={(params) => (
                   <TextField
                     {...params}
-                    label={window.innerWidth < 350 ? 'Vs' : 'Verse'}
+                    label={window.innerWidth < 500 ? 'Vs' : 'Verse'}
                     variant='standard'
                     className='text-center'
                     value={verse}

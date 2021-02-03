@@ -7,7 +7,21 @@ const {
   getAllChapters,
   getAllVerses,
   getVerse,
+  searchVerse,
 } = require('../controllers/controller');
+
+// POST router /search to search the bible
+router.post('/search', (req, res) => {
+  console.log(req.body);
+  const { keyword } = req.body;
+  try {
+    const result = searchVerse(keyword);
+    res.json(result);
+  } catch (error) {
+    res.status(500);
+    res.json(error);
+  }
+});
 
 router.get('/books', (req, res) => {
   res.json(books);

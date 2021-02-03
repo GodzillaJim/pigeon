@@ -77,6 +77,61 @@ books.map((book) => {
     )}.json`),
   });
 });
+
+// Putting space between number and book
+const parseBook = (book) => {
+  try {
+    let strArr = book.split('');
+    if (
+      strArr[0] === '1' ||
+      strArr[0] === '2' ||
+      strArr[0] === '3' ||
+      strArr[0] === '4'
+    ) {
+      let str = strArr[0] + ' ' + strArr.slice(1).join('');
+      console.log(str);
+      return str;
+    }
+  } catch (error) {
+    console.log(error);
+    return book;
+  }
+};
+
+// Search controller
+const searchVerse = (keyword) => {
+  // Method 1: Brute force
+  const result = [];
+  let kitabu = '';
+  let mlango = '';
+  let mstari = '';
+
+  bible.map((book, index) => {
+    for (const key in book) {
+      // key is book
+      kitabu = key;
+      book[key].chapters.map((chapter, index) => {
+        // chapter is index + 1
+        mlango = chapter.chapter;
+        let verses = chapter.verses;
+        verses.map((verse, i) => {
+          mstari = verse.verse;
+          let text = verse.text;
+          if (text.includes(keyword)) {
+            result.push({
+              book: parseBook(kitabu),
+              chapter: mlango,
+              verse: mstari,
+              text,
+            });
+          }
+        });
+      });
+    }
+  });
+  return result;
+};
+
 const getAllChapters = (booker) => {
   let chapters = 'Book not found';
   bible.map((book) => {
@@ -214,4 +269,5 @@ module.exports = {
   getAllChapters,
   getAllVerses,
   getVerse,
+  searchVerse,
 };
