@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { Nav, Navbar } from 'react-bootstrap';
@@ -21,10 +21,7 @@ const NavbarComponent = ({ history }) => {
   const [verse, setVerse] = useState(1);
   const [disableChapter, setDisableChapter] = useState(true);
   const [disableVerse, setDisableVerse] = useState(true);
-  const [error, setError] = useState(null);
-  const { book: currentBook, chapters: newChapters } = useSelector(
-    (state) => state.setBook
-  );
+  const { chapters: newChapters } = useSelector((state) => state.setBook);
   const { verses: newVerses } = useSelector((state) => state.setChapter);
 
   const styler = {
@@ -48,22 +45,22 @@ const NavbarComponent = ({ history }) => {
         setChapters(newChapters);
       } else {
         let error = new Error('Book not found!');
-        setError(error);
+        alert(error.message);
         setDisableChapter(true);
       }
     }
   };
   const setChapterHandler = (e, val) => {
+    e = null;
     if (val) {
       if (Number(val) <= chapters.length || Number(val) > 0) {
         setDisableVerse(false);
         setChapter(val);
-        setError(null);
         dispatch(setChapterAction({ book, chapter }));
         dispatch(setVerseAction({ book, chapter: val, verse }));
       } else {
         let error = new Error('Chapter not found!');
-        setError(error);
+        alert(error.message);
         setDisableVerse(true);
       }
     }
@@ -73,12 +70,11 @@ const NavbarComponent = ({ history }) => {
     if (val) {
       if (Number(val) <= newVerses.length || Number(val) > 0) {
         setVerse(val);
-        setError(null);
         dispatch(setVerseAction({ book, chapter, verse: val }));
         setGoDisabled(false);
       } else {
         let error = new Error('Chapter not found!');
-        setError(error);
+        alert(error);
         setDisableVerse(true);
         setGoDisabled(true);
       }
@@ -86,6 +82,7 @@ const NavbarComponent = ({ history }) => {
   };
   return (
     <Navbar
+      sticky={'bottom'}
       bg='light'
       className='justify-content-between navbar-expand-*'
       style={styler.navbar}
@@ -95,7 +92,7 @@ const NavbarComponent = ({ history }) => {
         id='basic-navbar-nav'
         className='justify-content-between'
       >
-        <Nav className={window.innerWidth > 768 ? 'mx-auto py-2' : 'mx-auto'}>
+        <Nav className={'mx-md-auto py-md-2'}>
           <Form inline onSubmit={submitHandler}>
             <Form.Group id='book-form-group'>
               <Autocomplete
@@ -103,17 +100,16 @@ const NavbarComponent = ({ history }) => {
                 color='inherit'
                 id='book'
                 onChange={setBookHandler}
-                options={allBooks}
+                options={allBooks || [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]}
                 getOptionLabel={(option) => option}
                 renderInput={(params) => (
                   <TextField
                     {...params}
                     label='Book'
-                    className='primary'
+                    className='primary text-center'
                     variant='standard'
                     value={book}
                     size={'small'}
-                    className='text-center'
                   />
                 )}
               />

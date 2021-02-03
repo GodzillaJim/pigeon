@@ -16,6 +16,7 @@ import {
   setVerseAction,
   setTextAction,
 } from '../actions/actions';
+import Popup from '../components/Popup';
 
 const HomeScreen = ({ history, match }) => {
   const { params } = match;
@@ -99,9 +100,9 @@ const HomeScreen = ({ history, match }) => {
     verseUrl,
   ]);
   return (
-    <Container className='mx-1 my-3'>
+    <Container className='mx-md-1 my-md-3'>
       <>
-        <Col md='9' sm='9' className='text-center'>
+        <Col md='9' sm='12' xs={12} className='text-center'>
           <Row>
             <LinkContainer
               style={{ height: '36px', fontSize: '16px' }}
@@ -142,24 +143,27 @@ const HomeScreen = ({ history, match }) => {
               <Loader />
             ) : (
               <Container className='font-small'>
-                {errorVerse && <Message message={errorVerse} />}
-                <p>
-                  {page.map((verse, index) => {
-                    return (
-                      <span key={index}>
-                        <sup>
-                          <Badge
-                            variant='primary'
-                            style={{ fontSize: '10px', margin: '2px' }}
-                          >
-                            {verse.verse}
-                          </Badge>
-                        </sup>
-                        {verse.text}
-                      </span>
-                    );
-                  })}
-                </p>
+                {errorVerse ? (
+                  <Popup show={true} books={errorVerse.books} history />
+                ) : (
+                  <p>
+                    {page.map((verse, index) => {
+                      return (
+                        <span key={index}>
+                          <sup>
+                            <Badge
+                              variant='primary'
+                              style={{ fontSize: '10px', margin: '2px' }}
+                            >
+                              {verse.verse}
+                            </Badge>
+                          </sup>
+                          {verse.text}
+                        </span>
+                      );
+                    })}
+                  </p>
+                )}
               </Container>
             )}
           </Row>

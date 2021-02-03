@@ -33,9 +33,13 @@ export const setTextAction = (verse) => async (dispatch) => {
     const { data } = await axios.get(
       `/books/${verse.book}/${verse.chapter}/${verse.verse}`
     );
+    if (data.status) {
+      dispatch({ type: SET_CURRENT_READING_FAIL, payload: data });
+      return;
+    }
     dispatch({ type: SET_CURRENT_READING_SUCCESS, payload: data });
   } catch (error) {
-    dispatch({ type: SET_CURRENT_READING_FAIL, payload: error });
+    dispatch({ type: SET_CURRENT_READING_FAIL, payload: error.data || error });
   }
 };
 export const setVerseAction = (data) => async (dispatch) => {

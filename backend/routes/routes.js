@@ -35,8 +35,9 @@ router.get('/books/:book/:chapter', (req, res) => {
 });
 router.get('/books/:book/:chapter/:verse', (req, res) => {
   try {
+    console.log(req.params);
     const { book, chapter, verse } = req.params;
-    const r = getVerse(book, chapter, verse);
+    const r = getVerse(book.replace(/\s/g, ''), chapter, verse);
     res.json(r);
   } catch (error) {
     res.status(400);

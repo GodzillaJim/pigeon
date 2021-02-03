@@ -85,7 +85,19 @@ const getAllChapters = (booker) => {
     }
   });
   if (chapters === 'Book not found') {
-    throw new Error('Book not found');
+    const query = booker.split('').slice(0, 3).join('');
+    console.log(query);
+    const searchBooks = [];
+    books.map((book) => {
+      if (
+        book.includes(query) ||
+        book.startsWith(query) ||
+        book.endsWith(query)
+      ) {
+        searchBooks.push(book);
+      }
+    });
+    return { status: 'fail', books: searchBooks };
   }
   let a = [];
   chapters.map((key, index) => {
@@ -103,11 +115,35 @@ const getAllVerses = (booker, chapter) => {
       chapters = book[booker].chapters;
     }
   });
+  // Book not found
   if (chapters === 'Chapter not found') {
-    throw new Error('Chapter not found');
+    const query = booker.split('').slice(0, 3).join('');
+    console.log(query);
+    const searchBooks = [];
+    books.map((book) => {
+      if (
+        book.includes(query) ||
+        book.startsWith(query) ||
+        book.endsWith(query)
+      ) {
+        searchBooks.push(book);
+      }
+    });
+    return { status: 'fail', books: searchBooks };
+  }
+
+  // Chapter is above last chapter
+  if (chapters.length < chapter) {
+    chapter = chapters.length;
+  }
+  //Chapter is below 1
+  if (chapter < 1) {
+    chapter = 1;
   }
   const verses = chapters[chapter - 1];
   let a = [];
+
+  // Additional checking
   if (!verses || !verses.verses) {
     throw new Error('Chapter not found!');
   }
@@ -120,17 +156,45 @@ const getVerse = (booker, chapter, verse) => {
   if (!booker || !chapter) {
     throw new Error('Wrong information');
   }
-  let chapters = 'Chapter not found';
+  let chapters = 'Book not found';
   bible.map((book) => {
     if (book[booker]) {
       chapters = book[booker].chapters;
     }
   });
-  if (chapters === 'Chapter not found') {
-    throw new Error('Chapter not found');
+
+  // Book not found
+  if (chapters === 'Book not found') {
+    const query = booker.split('').slice(0, 3).join('');
+    console.log(query);
+    const searchBooks = [];
+    books.map((book) => {
+      if (
+        book.includes(query) ||
+        book.startsWith(query) ||
+        book.endsWith(query)
+      ) {
+        searchBooks.push(book);
+      }
+    });
+    return { status: 'fail', books: searchBooks };
+  }
+  // check chapter is available
+  if (chapter < 1) {
+    chapter = 1;
+  }
+  if (chapter > chapters.length) {
+    chapter = chapters.length;
   }
   const verses = chapters[chapter - 1];
   let t = verses.verses;
+
+  if (verse < 1) {
+    verse = 1;
+  }
+  if (verse > t.length) {
+    verse = t.length;
+  }
   let i = Number(verse) + 15 < t.length ? 15 : t.length - Number(verse);
   let page = t.slice(Number(verse - 1), Number(verse) + i);
 
