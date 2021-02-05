@@ -9,6 +9,7 @@ import HomeScreen from './screens/HomeScreen';
 import CategoryScreen from './screens/CategoryScreen';
 import Sidebar from './components/Sidebar.js';
 import SearchScreen from './screens/SearchScreen';
+import Footer from './components/Footer.js';
 
 const App = () => {
   return (
@@ -30,10 +31,16 @@ const App = () => {
           <Route path={'/word/:book/:chapter'} exact component={HomeScreen} />
           <Route path={`/word/:book`} component={HomeScreen} exact />
           <Route exact path={`/search`} component={SearchScreen} />
-          <Route path={`/search/:keyword`} component={SearchScreen} />
+          <Route path={`/search/:keyword`} component={SearchScreen} exact />
+          <Route
+            path={`/search/:keyword/:page`}
+            component={SearchScreen}
+            exact
+          />
           <Route path='/' component={HomeScreen} exact />
         </main>
       </Row>
+      <Footer />
     </Router>
   );
 };

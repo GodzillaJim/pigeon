@@ -22,7 +22,7 @@ const categories = [
   },
   {
     category: 'Poetry Books',
-    books: ['Job', 'Psalms', 'Proverbs', 'Ecclesiastes', 'Songs of Solomon'],
+    books: ['Job', 'Psalms', 'Proverbs', 'Ecclesiastes', 'Song of Solomon'],
   },
   {
     category: 'Major Prophets',

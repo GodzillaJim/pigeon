@@ -196,35 +196,45 @@ const HomeScreen = ({ match }) => {
         <Col md='3' className='mobile-hide justify-content-center '>
           <div className='bg-light my-1'>
             <h6 className='text-center'>Chapters</h6>
-            {newChapters.map((chapter, key) => (
-              <LinkContainer
-                key={key}
-                to={`/word/${bookSetVerse}/${chapter}/${verseSetVerse}`}
-              >
-                <Button
-                  variant='link'
-                  active={chapter === chapterSetVerse || false}
-                >
-                  {chapter}
-                </Button>
-              </LinkContainer>
-            ))}
+            {newChapters.map((chapter, key) => {
+              if (Math.abs(Number(chapter) - chapterSetVerse) < 26) {
+                return (
+                  <LinkContainer
+                    key={key}
+                    to={`/word/${bookSetVerse}/${chapter}/${verseSetVerse}`}
+                  >
+                    <Button
+                      variant='light'
+                      active={chapter + '' === chapterSetVerse || false}
+                    >
+                      {chapter}
+                    </Button>
+                  </LinkContainer>
+                );
+              } else {
+                return null;
+              }
+            })}
           </div>
           <div className='bg-light my-1'>
             <h6 className='text-center'>Verses</h6>
-            {newVerses.map((verse, key) => (
-              <LinkContainer
-                key={key}
-                to={`/word/${bookSetVerse}/${chapterSetVerse}/${verse}`}
-              >
-                <Button
-                  variant='link'
-                  active={verse + '' === verseSetVerse + ''}
-                >
-                  {verse}
-                </Button>
-              </LinkContainer>
-            ))}
+            {newVerses.map((verse, key) => {
+              if (Math.abs(Number(verse) - Number(verseSetVerse)) < 16) {
+                return (
+                  <LinkContainer
+                    key={key}
+                    to={`/word/${bookSetVerse}/${chapterSetVerse}/${verse}`}
+                  >
+                    <Button
+                      variant='light'
+                      active={verse + '' === verseSetVerse + ''}
+                    >
+                      {verse}
+                    </Button>
+                  </LinkContainer>
+                );
+              }
+            })}
           </div>
         </Col>
       </Row>

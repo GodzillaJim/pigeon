@@ -21,12 +21,21 @@ import {
   SEARCH_VERSE_FAIL,
 } from '../constants/constants';
 
-export const searchVerseReducer = (state = { results: [] }, action) => {
+export const searchVerseReducer = (
+  state = { results: [], page: 1, numOfPages: 1 },
+  action
+) => {
   switch (action.type) {
     case SEARCH_VERSE_REQUEST:
       return { loading: true, results: [] };
     case SEARCH_VERSE_SUCCESS:
-      return { loading: false, results: action.payload };
+      return {
+        keyword: action.payload.keyword,
+        loading: false,
+        results: action.payload.r,
+        page: action.payload.page,
+        numOfPages: action.payload.numOfPages,
+      };
     case SEARCH_VERSE_FAIL:
       return { loading: false, error: action.payload };
     default:

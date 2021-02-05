@@ -22,11 +22,15 @@ import {
   SEARCH_VERSE_SUCCESS,
 } from '../constants/constants';
 
-export const searchVerseAction = (keyword) => async (dispatch) => {
+export const searchVerseAction = (keyword, page = 1) => async (dispatch) => {
   try {
     dispatch({ type: SEARCH_VERSE_REQUEST });
-    const { data } = await axios.post('/search', { keyword });
-    dispatch({ type: SEARCH_VERSE_SUCCESS, payload: data });
+    const { data } = await axios.post('/search', { keyword, page });
+    const { numOfPages, r } = data;
+    dispatch({
+      type: SEARCH_VERSE_SUCCESS,
+      payload: { numOfPages: Math.ceil(numOfPages), r, page, keyword },
+    });
   } catch (error) {
     dispatch({ type: SEARCH_VERSE_FAIL, payload: error });
   }

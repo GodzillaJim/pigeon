@@ -12,6 +12,7 @@ import {
   setChapterAction,
   setVerseAction,
   searchVerseAction,
+  setTextAction,
 } from '../actions/actions';
 
 const NavbarComponent = ({ history }) => {
@@ -40,20 +41,13 @@ const NavbarComponent = ({ history }) => {
     history.push(`/word/${book}/${chapter}/${verse}`);
   };
   const setBookHandler = (e, val) => {
-    if (val) {
-      let t = allBooks.indexOf(val);
-      if (t !== -1) {
-        setBook(val);
-        setDisableChapter(false);
-        dispatch(setBookAction(val));
-        dispatch(setVerseAction({ book: val, chapter, verse }));
-        setChapters(newChapters);
-      } else {
-        let error = new Error('Book not found!');
-        alert(error.message);
-        setDisableChapter(true);
-      }
-    }
+    console.log('called');
+    setBook(val);
+    setDisableChapter(false);
+    dispatch(setBookAction(val));
+    dispatch(setVerseAction({ book: val, chapter, verse }));
+    dispatch(setTextAction({ book: val, chapter, verse }));
+    setChapters(newChapters);
   };
   const setChapterHandler = (e, val) => {
     e = null;
@@ -94,7 +88,7 @@ const NavbarComponent = ({ history }) => {
   };
   return (
     <Navbar
-      sticky={'bottom'}
+      sticky={window.innerWidth > 768 ? 'top' : 'bottom'}
       bg='light'
       className='justify-content-between navbar-expand-*'
       style={styler.navbar}

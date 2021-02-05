@@ -1,5 +1,6 @@
 const categories = require('../utilities/tools.js');
 const _ = require('lodash');
+const verses = require('../utilities/indexing');
 const books = [
   'Genesis',
   'Exodus',
@@ -101,35 +102,18 @@ const parseBook = (book) => {
 // Search controller
 const searchVerse = (keyword) => {
   // Method 1: Brute force
-  const result = [];
-  let kitabu = '';
-  let mlango = '';
-  let mstari = '';
-
-  bible.map((book, index) => {
-    for (const key in book) {
-      // key is book
-      kitabu = key;
-      book[key].chapters.map((chapter, index) => {
-        // chapter is index + 1
-        mlango = chapter.chapter;
-        let verses = chapter.verses;
-        verses.map((verse, i) => {
-          mstari = verse.verse;
-          let text = verse.text;
-          if (text.includes(keyword)) {
-            result.push({
-              book: parseBook(kitabu),
-              chapter: mlango,
-              verse: mstari,
-              text,
-            });
-          }
-        });
-      });
+  try {
+    const result = [];
+    for (let i = 0; i < verses.length; i++) {
+      if (verses[i].text.toLowerCase().includes(keyword.toLowerCase())) {
+        result.push(verses[i]);
+      }
     }
-  });
-  return result;
+    return result;
+  } catch (error) {
+    console.log(error);
+    return error;
+  }
 };
 
 const getAllChapters = (booker) => {

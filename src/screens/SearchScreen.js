@@ -8,24 +8,38 @@ import {
   Form,
   ListGroup,
   Alert,
+  Pagination,
 } from 'react-bootstrap';
-import { ListContainer } from 'react-router-bootstrap';
+import { LinkContainer } from 'react-router-bootstrap';
 import { searchVerseAction } from '../actions/actions';
 import Loader from '../components/Loader';
+import NotFound from '../components/NotFound.js';
 
 const SearchScreen = ({ match, history }) => {
   const keyword = match.params.keyword;
-  const { results, loading, error } = useSelector((state) => state.searchVerse);
+  const urlPage = match.params.page;
+  const {
+    results,
+    loading,
+    error,
+    numOfPages,
+    page: currentPage,
+    keyword: qword,
+  } = useSelector((state) => state.searchVerse);
   const [query, setQuery] = useState('');
+  const [page, setPage] = useState(1);
   const dispatch = useDispatch();
   useEffect(() => {
-    if (keyword) {
-      dispatch(searchVerseAction(keyword));
+    if (keyword && !loading && keyword !== qword) {
+      dispatch(searchVerseAction(keyword, page));
     }
-  }, [keyword, dispatch, results, loading, error]);
+    if (keyword && urlPage && !loading && urlPage !== currentPage) {
+      dispatch(searchVerseAction(keyword, urlPage));
+    }
+  }, [keyword, dispatch, urlPage, results, numOfPages, error]);
   const handleSubmit = (e) => {
     e.preventDefault();
-    dispatch(searchVerseAction(query));
+    dispatch(searchVerseAction(query, page));
   };
 
   return (
@@ -54,21 +68,64 @@ const SearchScreen = ({ match, history }) => {
           </Form>
         </Row>
       )}
-      <Row className='bg-light m-2'>
-        <Col md={12} sm={12}>
-          {loading ? (
-            <Loader />
-          ) : error ? (
-            <Alert>{error}</Alert>
-          ) : (
-            <ListGroup variant='flush'>
-              {results.map((result, key) => (
-                <ListGroup.Item key={key}>{result}</ListGroup.Item>
-              ))}
-            </ListGroup>
-          )}
-        </Col>
-      </Row>
+      {results.length < 1 ? (
+        <NotFound />
+      ) : (
+        <Row className='bg-light m-2'>
+          <Col md={12} sm={12}>
+            {loading ? (
+              <Loader />
+            ) : error ? (
+              <Alert>{error}</Alert>
+            ) : (
+              <ListGroup variant='flush'>
+                {results.map((result, key) => (
+                  <ListGroup.Item key={key}>
+                    <LinkContainer
+                      to={`/word/${result.book}/${result.chapter}/${result.verse}`}
+                    >
+                      <a href='#' className='h5'>
+                        {result.book +
+                          '/' +
+                          result.chapter +
+                          '/' +
+                          result.verse}
+                      </a>
+                    </LinkContainer>
+                    <p>
+                      {result.text.length > 150
+                        ? result.text.length
+                        : result.text.slice(0, 150) + '...'}
+                    </p>
+                  </ListGroup.Item>
+                ))}
+              </ListGroup>
+            )}
+          </Col>
+          <Pagination className='mx-auto'>
+            {[...Array(numOfPages).keys()].map((p) => {
+              if (Math.abs(Number(currentPage) - (Number(p) + 1)) < 4) {
+                return (
+                  <LinkContainer
+                    key={p}
+                    to={`/search/${qword}/${Number(p + 1)}`}
+                  >
+                    <Pagination.Item
+                      active={Number(p) + 1 === Number(currentPage)}
+                      key={p}
+                      href='#'
+                    >
+                      {Number(p) + 1}
+                    </Pagination.Item>
+                  </LinkContainer>
+                );
+              } else {
+                return null;
+              }
+            })}
+          </Pagination>
+        </Row>
+      )}
     </Container>
   );
 };
