@@ -10,7 +10,9 @@ const Footer = () => {
   return (
     <Container className='mx-auto bg-light' style={style}>
       <Row>
-        <Col className='mx-auto'>&copy;{new Date().getFullYear()}</Col>
+        <Col className='mx-auto'>
+          &copy;{' ' + new Date().getFullYear() + ' GodzillaJim'}
+        </Col>
       </Row>
     </Container>
   );
