@@ -2,7 +2,7 @@ const _ = require('lodash');
 const books = [
   'Genesis',
   'Exodus',
-  'leviticus',
+  'Leviticus',
   'Numbers',
   'Deuteronomy',
   'Judges',
