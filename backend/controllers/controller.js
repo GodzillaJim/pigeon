@@ -1,10 +1,11 @@
 const categories = require('../utilities/tools.js');
 const _ = require('lodash');
+const path = require('path');
 const verses = require('../utilities/indexing');
 const books = [
   'Genesis',
   'Exodus',
-  'leviticus',
+  'Leviticus',
   'Numbers',
   'Deuteronomy',
   'Judges',
@@ -72,10 +73,10 @@ const books = [
 const bible = [];
 books.map((book) => {
   bible.push({
-    [book.replace(/\s/g, '')]: require(`../bible/${book.replace(
-      /\s/g,
-      ''
-    )}.json`),
+    [book.replace(/\s/g, '')]: require(path.join(
+      '../bible',
+      `${book.replace(/\s/g, '')}.json`
+    )),
   });
 });
 

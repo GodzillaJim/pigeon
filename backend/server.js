@@ -5,7 +5,7 @@ const app = express();
 const dotenv = require('dotenv');
 const path = require('path');
 dotenv.config();
-
+console.log(__dirname);
 app.use(morgan('combined'));
 app.use(express.json());
 app.use(router);
