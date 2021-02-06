@@ -233,6 +233,8 @@ const HomeScreen = ({ match }) => {
                     </Button>
                   </LinkContainer>
                 );
+              } else {
+                return null;
               }
             })}
           </div>

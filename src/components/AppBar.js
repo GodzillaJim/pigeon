@@ -33,6 +33,7 @@ const NavbarComponent = ({ history }) => {
   const styler = {
     navbar: {
       boxShadow: '0px 6px 5px 0px rgba(0,0,0,0.36)',
+      width: '100%',
     },
   };
   const submitHandler = (e) => {

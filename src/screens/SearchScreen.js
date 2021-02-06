@@ -36,7 +36,18 @@ const SearchScreen = ({ match, history }) => {
     if (keyword && urlPage && !loading && urlPage !== currentPage) {
       dispatch(searchVerseAction(keyword, urlPage));
     }
-  }, [keyword, dispatch, urlPage, results, numOfPages, error]);
+  }, [
+    keyword,
+    dispatch,
+    currentPage,
+    loading,
+    page,
+    qword,
+    urlPage,
+    results,
+    numOfPages,
+    error,
+  ]);
   const handleSubmit = (e) => {
     e.preventDefault();
     dispatch(searchVerseAction(query, page));
@@ -68,7 +79,7 @@ const SearchScreen = ({ match, history }) => {
           </Form>
         </Row>
       )}
-      {results.length < 1 ? (
+      {results.length < 1 && query !== '' ? (
         <NotFound />
       ) : (
         <Row className='bg-light m-2'>
@@ -84,13 +95,13 @@ const SearchScreen = ({ match, history }) => {
                     <LinkContainer
                       to={`/word/${result.book}/${result.chapter}/${result.verse}`}
                     >
-                      <a href='#' className='h5'>
+                      <Button variant='link' className='h5'>
                         {result.book +
                           '/' +
                           result.chapter +
                           '/' +
                           result.verse}
-                      </a>
+                      </Button>
                     </LinkContainer>
                     <p>
                       {result.text.length > 150
@@ -113,7 +124,7 @@ const SearchScreen = ({ match, history }) => {
                     <Pagination.Item
                       active={Number(p) + 1 === Number(currentPage)}
                       key={p}
-                      href='#'
+                      onClick={(e) => setPage(e.target.value)}
                     >
                       {Number(p) + 1}
                     </Pagination.Item>
