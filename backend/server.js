@@ -1,6 +1,6 @@
 const express = require('express');
 const router = require('./routes/routes');
-const morgan = require('morgan');
+// const morgan = require('morgan');
 const app = express();
 const dotenv = require('dotenv');
 const path = require('path');
@@ -9,7 +9,7 @@ console.log(__dirname);
 
 app.use(express.json());
 if (process.env.NODE_ENV === 'DEVELOPMENT') {
-  app.use(morgan('combined'));
+  // app.use(morgan('combined'));
 }
 app.use(router);
 if (process.env.NODE_ENV === 'PRODUCTION') {
