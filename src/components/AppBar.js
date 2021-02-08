@@ -45,7 +45,7 @@ const NavbarComponent = ({ history }) => {
   const submitHandler = (e) => {
     e.preventDefault();
     dispatch(setVerseAction({ book, chapter, verse }));
-    history.push(`/word/${bookSetVerse}/${chapterSetVerse}/${verseSetVerse}`);
+    history.push(`/word/${book}/${chapter}/${verse}`);
   };
   const setBookHandler = (e, val) => {
     setBook(val);
@@ -70,9 +70,9 @@ const NavbarComponent = ({ history }) => {
         dispatch(setChapterAction({ book, chapter }));
         dispatch(
           setVerseAction({
-            book: bookSetVerse,
+            book,
             chapter: val,
-            verse: verseSetVerse,
+            verse,
           })
         );
       } else {
@@ -89,8 +89,8 @@ const NavbarComponent = ({ history }) => {
         setVerse(val);
         dispatch(
           setVerseAction({
-            book: bookSetVerse,
-            chapter: chapterSetVerse,
+            book,
+            chapter,
             verse: val,
           })
         );
@@ -132,7 +132,7 @@ const NavbarComponent = ({ history }) => {
                 onChange={setBookHandler}
                 options={allBooks || [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]}
                 getOptionLabel={(option) => option}
-                value={bookSetVerse}
+                value={book}
                 renderInput={(params) => (
                   <TextField
                     {...params}
@@ -149,7 +149,7 @@ const NavbarComponent = ({ history }) => {
                 className=' mx-2 w-45'
                 color='inherit'
                 id='chapter'
-                value={chapterSetVerse}
+                value={chapter}
                 disabled={disableChapter}
                 options={newChapters ? newChapters : []}
                 onChange={setChapterHandler}
@@ -167,7 +167,7 @@ const NavbarComponent = ({ history }) => {
             </Form.Group>
             <Form.Group id='verse-form-group'>
               <Autocomplete
-                value={verseSetVerse}
+                value={verse}
                 className='w-45 mx-2'
                 color='inherit'
                 id='verse'
