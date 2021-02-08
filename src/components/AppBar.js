@@ -45,13 +45,19 @@ const NavbarComponent = ({ history }) => {
   const submitHandler = (e) => {
     e.preventDefault();
     dispatch(setVerseAction({ book, chapter, verse }));
-    history.push(`/word/${book}/${chapter}/${verse}`);
+    history.push(`/word/${bookSetVerse}/${chapterSetVerse}/${verseSetVerse}`);
   };
   const setBookHandler = (e, val) => {
     setBook(val);
     setDisableChapter(false);
     dispatch(setBookAction(val));
-    dispatch(setVerseAction({ book: val, chapter, verse }));
+    dispatch(
+      setVerseAction({
+        book: val,
+        chapter: chapterSetVerse,
+        verse: verseSetVerse,
+      })
+    );
     dispatch(setTextAction({ book: val, chapter, verse }));
     setChapters(newChapters);
   };
@@ -62,7 +68,13 @@ const NavbarComponent = ({ history }) => {
         setDisableVerse(false);
         setChapter(val);
         dispatch(setChapterAction({ book, chapter }));
-        dispatch(setVerseAction({ book, chapter: val, verse }));
+        dispatch(
+          setVerseAction({
+            book: bookSetVerse,
+            chapter: val,
+            verse: verseSetVerse,
+          })
+        );
       } else {
         let error = new Error('Chapter not found!');
         alert(error.message);
@@ -75,7 +87,13 @@ const NavbarComponent = ({ history }) => {
     if (val) {
       if (Number(val) <= newVerses.length || Number(val) > 0) {
         setVerse(val);
-        dispatch(setVerseAction({ book, chapter, verse: val }));
+        dispatch(
+          setVerseAction({
+            book: bookSetVerse,
+            chapter: chapterSetVerse,
+            verse: val,
+          })
+        );
         setGoDisabled(false);
       } else {
         let error = new Error('Chapter not found!');
