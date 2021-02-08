@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 import { withRouter } from 'react-router-dom';
@@ -29,6 +29,12 @@ const NavbarComponent = ({ history }) => {
   const [query, setQuery] = useState('');
   const { chapters: newChapters } = useSelector((state) => state.setBook);
   const { verses: newVerses } = useSelector((state) => state.setChapter);
+  const {
+    book: bookSetVerse,
+    chapter: chapterSetVerse,
+    verse: verseSetVerse,
+  } = useSelector((state) => state.setVerse);
+  useEffect(() => {}, [bookSetVerse, chapterSetVerse, verseSetVerse]);
 
   const styler = {
     navbar: {
@@ -42,7 +48,6 @@ const NavbarComponent = ({ history }) => {
     history.push(`/word/${book}/${chapter}/${verse}`);
   };
   const setBookHandler = (e, val) => {
-    console.log('called');
     setBook(val);
     setDisableChapter(false);
     dispatch(setBookAction(val));
@@ -109,13 +114,13 @@ const NavbarComponent = ({ history }) => {
                 onChange={setBookHandler}
                 options={allBooks || [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]}
                 getOptionLabel={(option) => option}
+                value={bookSetVerse}
                 renderInput={(params) => (
                   <TextField
                     {...params}
                     label='Book'
                     className='primary text-center'
                     variant='standard'
-                    value={book}
                     size={'small'}
                   />
                 )}
@@ -126,6 +131,7 @@ const NavbarComponent = ({ history }) => {
                 className=' mx-2 w-45'
                 color='inherit'
                 id='chapter'
+                value={chapterSetVerse}
                 disabled={disableChapter}
                 options={newChapters ? newChapters : []}
                 onChange={setChapterHandler}
@@ -136,13 +142,14 @@ const NavbarComponent = ({ history }) => {
                     label={window.innerWidth < 500 ? 'Ch' : 'Chapter'}
                     variant='standard'
                     className='text-center'
-                    value={chapter}
+                    value={chapterSetVerse}
                   />
                 )}
               />
             </Form.Group>
             <Form.Group id='verse-form-group'>
               <Autocomplete
+                value={verseSetVerse}
                 className='w-45 mx-2'
                 color='inherit'
                 id='verse'
@@ -156,7 +163,7 @@ const NavbarComponent = ({ history }) => {
                     label={window.innerWidth < 500 ? 'Vs' : 'Verse'}
                     variant='standard'
                     className='text-center'
-                    value={verse}
+                    value={verseSetVerse}
                   />
                 )}
               />

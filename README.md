@@ -1,1 +1,3 @@
-Frontend application to read and search the Bible using ReactJS and redux.
+Read your Bible app, using NodeJS, ReactJS and Redux.
+
+Live at http://pigeon-bible.herokuapp.com/

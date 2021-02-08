@@ -12,12 +12,10 @@ const {
 
 // POST router /search to search the bible
 router.post('/search', (req, res) => {
-  console.log(req.body);
   const { keyword, page } = req.body;
 
   try {
     const result = searchVerse(keyword);
-    console.log(result);
     const diff = 10;
     const numOfPages = result.length / diff;
     const start = page === 1 ? 0 : Number(Number(page) - 1) * diff;
@@ -55,7 +53,6 @@ router.get('/books/:book/:chapter', (req, res) => {
 });
 router.get('/books/:book/:chapter/:verse', (req, res) => {
   try {
-    console.log(req.params);
     const { book, chapter, verse } = req.params;
     const r = getVerse(book.replace(/\s/g, ''), chapter, verse);
     res.json(r);
@@ -67,7 +64,6 @@ router.get('/books/:book/:chapter/:verse', (req, res) => {
 router.get('/categories', (req, res) => {
   try {
     const cats = getCategories();
-    console.log(cats);
     res.json(cats);
   } catch (error) {
     res.status(400);

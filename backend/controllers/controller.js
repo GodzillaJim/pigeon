@@ -91,7 +91,6 @@ const parseBook = (book) => {
       strArr[0] === '4'
     ) {
       let str = strArr[0] + ' ' + strArr.slice(1).join('');
-      console.log(str);
       return str;
     }
   } catch (error) {
@@ -126,7 +125,6 @@ const getAllChapters = (booker) => {
   });
   if (chapters === 'Book not found') {
     const query = booker.split('').slice(0, 3).join('');
-    console.log(query);
     const searchBooks = [];
     books.map((book) => {
       if (
@@ -158,7 +156,6 @@ const getAllVerses = (booker, chapter) => {
   // Book not found
   if (chapters === 'Chapter not found') {
     const query = booker.split('').slice(0, 3).join('');
-    console.log(query);
     const searchBooks = [];
     books.map((book) => {
       if (
@@ -206,7 +203,6 @@ const getVerse = (booker, chapter, verse) => {
   // Book not found
   if (chapters === 'Book not found') {
     const query = booker.split('').slice(0, 3).join('');
-    console.log(query);
     const searchBooks = [];
     books.map((book) => {
       if (

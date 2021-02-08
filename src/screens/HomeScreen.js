@@ -123,16 +123,23 @@ const HomeScreen = ({ match }) => {
       <Row>
         <Col md='9' sm='12' xs={12} className='text-center bg-light'>
           <Row>
-            <LinkContainer
-              style={{ height: '36px', fontSize: '16px' }}
-              className='mytop padding-small'
-              disabled={verseSetVerse >= finalVerse}
-              to={`/word/${bookSetVerse}/${chapterSetVerse}/${
-                Number(verseSetVerse) - (verseSetVerse <= 1 ? 0 : 1)
-              }`}
-            >
-              <span className='text-primary text-bolder mx-2'>Previous</span>
-            </LinkContainer>
+            {verseSetVerse <= 1 + '' ? (
+              <span className='text-secondary text-bolder mytop padding-small mx-2'>
+                Previous
+              </span>
+            ) : (
+              <LinkContainer
+                style={{ height: '36px', fontSize: '16px' }}
+                className='mytop padding-small'
+                to={`/word/${bookSetVerse}/${chapterSetVerse}/${
+                  Number(verseSetVerse) - 16 < 1
+                    ? 1
+                    : Number(verseSetVerse) - (verseSetVerse <= 1 ? 0 : 16)
+                }`}
+              >
+                <span className='text-primary text-bolder mx-2'>Previous</span>
+              </LinkContainer>
+            )}
             <Breadcrumb className='mytop padding-small mx-auto'>
               <LinkContainer to={`/word/${bookSetVerse}`}>
                 <Breadcrumb.Item className='text-bolder'>
@@ -141,27 +148,32 @@ const HomeScreen = ({ match }) => {
               </LinkContainer>
               <LinkContainer to={`/word/${bookSetVerse}/${chapterSetVerse}`}>
                 <Breadcrumb.Item className='text-bolder'>
-                  {chapterSetVerse}
+                  {Number(chapterSetVerse) < 1 ? 1 : chapterSetVerse}
                 </Breadcrumb.Item>
               </LinkContainer>
               <LinkContainer
                 to={`/word/${bookSetVerse}/${chapterSetVerse}/${verseSetVerse}`}
               >
                 <Breadcrumb.Item className='text-bolder'>
-                  {verseSetVerse}
+                  {Number(verseSetVerse) < 1 ? 1 : verseSetVerse}
                 </Breadcrumb.Item>
               </LinkContainer>
             </Breadcrumb>
-            <LinkContainer
-              style={{ height: '36px', fontSize: '16px' }}
-              className='mytop padding-small'
-              disabled={verseSetVerse >= finalVerse}
-              to={`/word/${bookSetVerse}/${chapterSetVerse}/${
-                Number(verseSetVerse) + (verseSetVerse >= finalVerse ? 0 : 1)
-              }`}
-            >
-              <span className='text-primary text-bolder mx-2'>Next</span>
-            </LinkContainer>
+            {Number(verseSetVerse) + 16 >= Number(finalVerse) ? (
+              <span className='text-secondary text-bolder mx-2 mytop padding-small'>
+                Next
+              </span>
+            ) : (
+              <LinkContainer
+                style={{ height: '36px', fontSize: '16px' }}
+                className='mytop padding-small'
+                to={`/word/${bookSetVerse}/${chapterSetVerse}/${
+                  Number(verseSetVerse) + (verseSetVerse >= finalVerse ? 0 : 16)
+                }`}
+              >
+                <span className='text-primary text-bolder mx-2'>Next</span>
+              </LinkContainer>
+            )}
           </Row>
           <Row>
             {loadingVerse ? (
@@ -197,7 +209,7 @@ const HomeScreen = ({ match }) => {
           <div className='bg-light my-1'>
             <h6 className='text-center'>Chapters</h6>
             {newChapters.map((chapter, key) => {
-              if (Math.abs(Number(chapter) - chapterSetVerse) < 26) {
+              if (Math.abs(Number(chapter) - chapterSetVerse) < 15) {
                 return (
                   <LinkContainer
                     key={key}
@@ -219,7 +231,7 @@ const HomeScreen = ({ match }) => {
           <div className='bg-light my-1'>
             <h6 className='text-center'>Verses</h6>
             {newVerses.map((verse, key) => {
-              if (Math.abs(Number(verse) - Number(verseSetVerse)) < 16) {
+              if (Math.abs(Number(verse) - Number(verseSetVerse)) < 8) {
                 return (
                   <LinkContainer
                     key={key}
