@@ -70,4 +70,6 @@ router.get('/categories', (req, res) => {
     res.json(error);
   }
 });
+
+router.post('mail', (req, res) => {});
 module.exports = router;
